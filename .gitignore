@@ -1,0 +1,4 @@
+node_modules
+_mocha.xml
+/coverage
+npm-debug.log
