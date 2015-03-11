@@ -1,5 +1,7 @@
 ## truncate-middle
 
+[![Build Status](https://travis-ci.org/kahwee/truncate-middle.svg?branch=master)](https://travis-ci.org/kahwee/truncate-middle)
+
 ## Usage
 Install from `npm`.
 
