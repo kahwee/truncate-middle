@@ -1,7 +1,7 @@
 {
   "name": "truncate-middle",
   "version": "1.0.1",
-  "description": "",
+  "description": "Truncates in the middle.",
   "main": "index.js",
   "scripts": {
     "test": "mocha --recursive",
