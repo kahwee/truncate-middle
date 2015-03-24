@@ -1,6 +1,6 @@
 {
   "name": "truncate-middle",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Truncates in the middle.",
   "main": "index.js",
   "scripts": {

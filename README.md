@@ -2,7 +2,7 @@
 
 There are cases where important information is at the end of the string and truncating the end isn't helpful.
 
-[![Build Status](https://travis-ci.org/kahwee/truncate-middle.svg?branch=master)](https://travis-ci.org/kahwee/truncate-middle) [![Coverage Status](https://coveralls.io/repos/kahwee/truncate-middle/badge.svg?branch=master)](https://coveralls.io/r/kahwee/truncate-middle?branch=master)
+[![Build Status](https://travis-ci.org/kahwee/truncate-middle.svg?branch=master)](https://travis-ci.org/kahwee/truncate-middle) [![Coverage Status](https://coveralls.io/repos/kahwee/truncate-middle/badge.svg?branch=master)](https://coveralls.io/r/kahwee/truncate-middle?branch=master) [![npm version](https://badge.fury.io/js/truncate-middle.svg)](http://badge.fury.io/js/truncate-middle)
 
 ## Example use cases
 
@@ -61,6 +61,19 @@ truncateMiddle('the quick brown', 50, 50);
 // Result:
 //  'the quick brown'
 ```
+
+### Function signature
+
+```js
+truncateMiddle(str, frontLen, backLen, truncateStr)
+```
+
+1. **str (string)**: String to be truncated
+1. **frontLen (number):** Number of characters to be remained in front.
+1. **backLen (number):** Number of characters to be remained at the back.
+1. **truncateStr (string):** String that is replaced the truncated portion. Defaults to `&hellip;`
+
+Return is always the truncated string.
 
 ## License
 
