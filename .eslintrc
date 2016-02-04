@@ -1,47 +1,18 @@
 {
+  "extends": "standard",
+  "parser": "babel-eslint",
   "env": {
+    "browser": true,
     "node": true,
-    "jquery": true,
     "mocha": true,
-    "browser": true
-  },
-  "settings": {
-    "ecmascript": 6,
-    "jsx": true
-  },
-  "globals": {
-    "_": true,
-    "moment": true,
-    "numeral": true,
-    "Backbone": true,
-    "Mn": true,
-    "Slick": true,
-    "Teeburu": true
   },
   "rules": {
-    "no-new-object": 1,
-    "no-reserved-keys": 1,
-    "no-array-constructor": 1,
-    "quotes": [1, "single"],
-    "max-len": [1, 120, 2],
-    "no-underscore-dangle": true,
-    "no-inner-declarations": [1, "both"],
-    "no-shadow-restricted-names": 1,
-    "one-var": 0,
-    "vars-on-top": 0,
-    "eqeqeq": 1,
-    "curly": [1, "multi-line"],
-    "no-mixed-spaces-and-tabs": 1,
-    "space-before-blocks": [1, "always"],
-    "space-infix-ops": 1,
-    "eol-last": 1,
-    "comma-style": [1, "last"],
-    "no-comma-dangle": 1,
-    "semi": [1, "always"],
-    "radix": 1,
-    "camelcase": 1,
-    "new-cap": 1,
-    "consistent-this": [1, "_this"],
-    "func-names": 0
+    "complexity": [1, 12],
+    "max-depth": [1, 3],
+    "max-nested-callbacks": [2, 4],
+    "max-params": [1, 4],
+    "max-statements": [1, 30]
+  },
+  "globals": {
   }
 }
