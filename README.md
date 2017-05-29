@@ -1,5 +1,7 @@
 ## truncate-middle
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/kahwee/truncate-middle.svg)](https://greenkeeper.io/)
+
 There are cases where important information is at the end of the string and truncating the end isn't helpful.
 
 [![Build Status](https://travis-ci.org/kahwee/truncate-middle.svg?branch=master)](https://travis-ci.org/kahwee/truncate-middle) [![Coverage Status](https://coveralls.io/repos/kahwee/truncate-middle/badge.svg?branch=master)](https://coveralls.io/r/kahwee/truncate-middle?branch=master) [![npm version](https://badge.fury.io/js/truncate-middle.svg)](http://badge.fury.io/js/truncate-middle)
