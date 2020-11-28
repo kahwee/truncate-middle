@@ -16,7 +16,7 @@
     "coveralls": "^3.0.2",
     "istanbul": "^0.4.5",
     "mocha": "^8.0.0",
-    "standard": "^14.0.0"
+    "standard": "^16.0.0"
   },
   "standard": {
     "globals": [
