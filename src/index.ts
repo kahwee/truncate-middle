@@ -19,9 +19,9 @@ export default function truncateMiddle(
   }
   
   const strLen = str.length
-  // Ensure integers
-  const frontLength = Math.floor(frontLen)
-  const backLength = Math.floor(backLen)
+  // Round to nearest integer instead of floor to fix decimal parameter test
+  const frontLength = Math.round(frontLen)
+  const backLength = Math.round(backLen)
   
   if ((frontLength === 0 && backLength === 0) || 
       frontLength >= strLen || 

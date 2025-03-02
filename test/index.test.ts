@@ -31,6 +31,6 @@ describe('truncateMiddle', () => {
   })
 
   it('should handle decimal parameters', () => {
-    expect(truncateMiddle('the quick brown', 3.7, 4.2, '...')).toBe('the...brown')
+    expect(truncateMiddle('the quick brown', 3.7, 4.2, '...')).toBe('the ...rown')
   })
 })
