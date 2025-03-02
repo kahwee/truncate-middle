@@ -1,82 +1,95 @@
-## truncate-middle
+# truncate-middle
 
-There are cases where important information is at the end of the string and truncating the end isn't helpful.
+Truncates strings in the middle. Useful when important information is at both the beginning and end of the string.
 
-[![Build Status](https://travis-ci.org/kahwee/truncate-middle.svg?branch=master)](https://travis-ci.org/kahwee/truncate-middle) 
-[![Coverage Status](https://coveralls.io/repos/kahwee/truncate-middle/badge.svg?branch=master)](https://coveralls.io/r/kahwee/truncate-middle?branch=master) 
-[![npm version](https://badge.fury.io/js/truncate-middle.svg)](http://badge.fury.io/js/truncate-middle) 
-[![Greenkeeper badge](https://badges.greenkeeper.io/kahwee/truncate-middle.svg)](https://greenkeeper.io/)
+[![npm version](https://badge.fury.io/js/truncate-middle.svg)](http://badge.fury.io/js/truncate-middle)
 
-## Example use cases
+## Example use case
 
 ```js
-var book1 = "America Again: Re-becoming the Greatness We Never Weren't by Stephen Colbert (978-0446583978)";
-var truncateMiddle = require('truncate-middle');
-var display = truncateMiddle(book1, 30, 16, '...');
+const book = "America Again: Re-becoming the Greatness We Never Weren't by Stephen Colbert (978-0446583978)";
+import truncateMiddle from 'truncate-middle';
+const display = truncateMiddle(book, 30, 16, '...');
 // You get 'America Again: Re-becoming the...(978-0446583978)'
 ```
 
-## Usage
-Install from `npm`.
+## Installation
 
 ```sh
-npm install --save truncate-middle
+# npm
+npm install truncate-middle
+
+# yarn
+yarn add truncate-middle
+
+# pnpm
+pnpm add truncate-middle
 ```
 
-Requiring in JavaScript
+## Usage
+
+### ESM (recommended)
 
 ```js
-var truncateMiddle = require('truncate-middle');
+import truncateMiddle from 'truncate-middle';
+
+// Basic usage
 truncateMiddle('the quick brown', 5, 3, '...');
-// Result:
-//  'the q...own'
+// => 'the q...own'
 ```
 
-Defaults:
+### CommonJS
 
+```js
+const truncateMiddle = require('truncate-middle');
+
+// Basic usage
+truncateMiddle('the quick brown', 5, 3, '...');
+// => 'the q...own'
+```
+
+### Examples
+
+Default behavior (no truncation):
 
 ```js
 truncateMiddle('the quick brown');
-// Result:
-//  'the quick brown'
+// => 'the quick brown'
 ```
 
 Specifying a front length of 5:
 
 ```js
 truncateMiddle('the quick brown', 5);
-// Result:
-//  'the q&hellip;'
+// => 'the q&hellip;'
 ```
 
 Specifying a front length of 5 and back length of 3:
 
 ```js
 truncateMiddle('the quick brown', 5, 3);
-// Result:
-//  'the q&hellip;own'
+// => 'the q&hellip;own'
 ```
 
-When there isn't anything to truncate:
+When the string is short enough that no truncation is needed:
 
 ```js
 truncateMiddle('the quick brown', 50, 50);
-// Result:
-//  'the quick brown'
+// => 'the quick brown'
 ```
 
-### Function signature
+## API
 
-```js
-truncateMiddle(str, frontLen, backLen, truncateStr)
-```
+### truncateMiddle(str, frontLen, backLen, truncateStr)
 
-1. **str (string)**: String to be truncated
-1. **frontLen (number):** Number of characters to be remained in front.
-1. **backLen (number):** Number of characters to be remained at the back.
-1. **truncateStr (string):** String that is replaced the truncated portion. Defaults to `&hellip;`
+| Parameter | Type | Description | Default |
+|-----------|------|-------------|---------|
+| str | string \| null \| undefined | String to be truncated | - |
+| frontLen | number | Number of characters to keep at the front | 0 |
+| backLen | number | Number of characters to keep at the back | 0 |
+| truncateStr | string | String that replaces the truncated portion | '&hellip;' |
 
-Return is always the truncated string.
+Returns: The truncated string.
 
 ## License
 

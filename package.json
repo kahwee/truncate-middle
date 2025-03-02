@@ -1,31 +1,49 @@
 {
   "name": "truncate-middle",
-  "version": "1.0.6",
+  "version": "2.0.0",
   "description": "Truncates in the middle.",
-  "main": "index.js",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "lint": "standard test/*.js",
-    "test": "mocha --recursive",
-    "coverage": "istanbul cover ./node_modules/mocha/bin/_mocha --report html",
-    "coverage-ci": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
+    "build": "tsup",
+    "lint": "eslint . --ext .ts,.js",
+    "test": "vitest run",
+    "coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
   },
   "author": "KahWee Teng <t@kw.sg> (http://kw.sg/)",
   "license": "MIT",
   "devDependencies": {
-    "chai": "^4.0.2",
-    "coveralls": "^3.0.2",
-    "istanbul": "^0.4.5",
-    "mocha": "^8.0.0",
-    "standard": "^14.0.0"
-  },
-  "standard": {
-    "globals": [
-      "describe",
-      "it"
-    ]
+    "@types/node": "^20.11.24",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
+    "eslint": "^8.57.1",
+    "tsup": "^8.0.2",
+    "typescript": "^5.3.3",
+    "vitest": "^3.0.7"
   },
   "repository": {
     "type": "git",
     "url": "git@github.com:kahwee/truncate-middle.git"
+  },
+  "keywords": [
+    "truncate",
+    "ellipsis",
+    "string"
+  ],
+  "engines": {
+    "node": ">=18"
   }
 }

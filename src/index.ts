@@ -2,13 +2,18 @@
  * There are cases where important information is at the end of the string and truncating the end isn't helpful.
  * This function solves that.
  *
- * @param  {string} str         String to be truncated
- * @param  {number} frontLen    Number of characters to be remained in front.
- * @param  {number} backLen     Number of characters to be remained at the back.
- * @param  {string} truncateStr String that is replaced the truncated portion
- * @return {string}             Truncated string. Defaults to '&hellip;' if unspecified.
+ * @param str - String to be truncated
+ * @param frontLen - Number of characters to be remained in front
+ * @param backLen - Number of characters to be remained at the back
+ * @param truncateStr - String that replaces the truncated portion
+ * @returns Truncated string. Defaults to '&hellip;' if unspecified
  */
-export default function truncateMiddle(str, frontLen = 0, backLen = 0, truncateStr = '&hellip;') {
+export default function truncateMiddle(
+  str: string | null | undefined, 
+  frontLen: number = 0, 
+  backLen: number = 0, 
+  truncateStr: string = '&hellip;'
+): string {
   if (str === null || str === undefined) {
     return ''
   }
