@@ -9,28 +9,30 @@
  * @returns Truncated string. Defaults to '&hellip;' if unspecified
  */
 export default function truncateMiddle(
-  str: string | null | undefined, 
-  frontLen: number = 0, 
-  backLen: number = 0, 
-  truncateStr: string = '&hellip;'
+  str: string | null | undefined,
+  frontLen: number = 0,
+  backLen: number = 0,
+  truncateStr: string = "&hellip;"
 ): string {
   if (str === null || str === undefined) {
-    return ''
+    return "";
   }
-  
-  const strLen = str.length
+
+  const strLen = str.length;
   // Round to nearest integer instead of floor to fix decimal parameter test
-  const frontLength = Math.round(frontLen)
-  const backLength = Math.round(backLen)
-  
-  if ((frontLength === 0 && backLength === 0) || 
-      frontLength >= strLen || 
-      backLength >= strLen || 
-      (frontLength + backLength) >= strLen) {
-    return str
+  const frontLength = Math.round(frontLen);
+  const backLength = Math.round(backLen);
+
+  if (
+    (frontLength === 0 && backLength === 0) ||
+    frontLength >= strLen ||
+    backLength >= strLen ||
+    frontLength + backLength >= strLen
+  ) {
+    return str;
   } else if (backLength === 0) {
-    return str.slice(0, frontLength) + truncateStr
+    return str.slice(0, frontLength) + truncateStr;
   } else {
-    return str.slice(0, frontLength) + truncateStr + str.slice(strLen - backLength)
+    return str.slice(0, frontLength) + truncateStr + str.slice(strLen - backLength);
   }
 }

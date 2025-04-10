@@ -3,6 +3,7 @@
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Commands
+
 - Build: `npm run build`
 - Lint: `npm run lint`
 - Lint & fix: `npm run lint:fix`
@@ -12,6 +13,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Coverage: `npm run coverage`
 
 ## Code Style Guidelines
+
 - **Module System**: ES Modules (`type: "module"` in package.json)
 - **Formatting**: Follow ESLint config (flat config format)
 - **Types**: TypeScript with strict mode enabled
