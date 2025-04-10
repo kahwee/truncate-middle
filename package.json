@@ -17,7 +17,8 @@
   ],
   "scripts": {
     "build": "tsup",
-    "lint": "eslint . --ext .ts,.js",
+    "lint": "eslint .",
+    "lint:fix": "npm run lint -- --fix",
     "test": "vitest run",
     "coverage": "vitest run --coverage",
     "typecheck": "tsc --noEmit",
@@ -26,12 +27,12 @@
   "author": "KahWee Teng <t@kw.sg> (http://kw.sg/)",
   "license": "MIT",
   "devDependencies": {
+    "@eslint/js": "^9.24.0",
     "@types/node": "^20.11.24",
-    "@typescript-eslint/eslint-plugin": "^7.18.0",
-    "@typescript-eslint/parser": "^7.18.0",
-    "eslint": "^8.57.1",
+    "globals": "^16.0.0",
     "tsup": "^8.0.2",
     "typescript": "^5.3.3",
+    "typescript-eslint": "^8.29.1",
     "vitest": "^3.0.7"
   },
   "repository": {
@@ -43,7 +44,7 @@
     "ellipsis",
     "string"
   ],
-  "engines": {
-    "node": ">=18"
+  "dependencies": {
+    "eslint": "^9.24.0"
   }
 }
