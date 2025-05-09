@@ -28,15 +28,16 @@
   "author": "KahWee Teng <t@kw.sg> (http://kw.sg/)",
   "license": "MIT",
   "devDependencies": {
-    "@eslint/js": "^9.24.0",
+    "@eslint/js": "^9.26.0",
     "@types/node": "^20.11.24",
-    "eslint-config-prettier": "^10.1.1",
-    "eslint-plugin-prettier": "^5.2.6",
-    "globals": "^16.0.0",
+    "eslint": "^9.26.0",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-plugin-prettier": "^5.4.0",
+    "globals": "^16.1.0",
     "prettier": "^3.5.3",
     "tsup": "^8.0.2",
-    "typescript": "^5.3.3",
-    "typescript-eslint": "^8.29.1",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.32.0",
     "vitest": "^3.0.7"
   },
   "repository": {
@@ -47,8 +48,5 @@
     "truncate",
     "ellipsis",
     "string"
-  ],
-  "dependencies": {
-    "eslint": "^9.24.0"
-  }
+  ]
 }
