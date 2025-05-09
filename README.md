@@ -4,7 +4,7 @@ Truncates strings in the middle. Useful when important information is at both th
 
 [![npm version](https://badge.fury.io/js/truncate-middle.svg)](http://badge.fury.io/js/truncate-middle)
 [![CI](https://github.com/kahwee/truncate-middle/actions/workflows/ci.yml/badge.svg)](https://github.com/kahwee/truncate-middle/actions/workflows/ci.yml)
-[![codecov](https://codecov.io/gh/kahwee/truncate-middle/branch/master/graph/badge.svg)](https://codecov.io/gh/kahwee/truncate-middle)
+[![codecov](https://codecov.io/gh/kahwee/truncate-middle/branch/main/graph/badge.svg)](https://codecov.io/gh/kahwee/truncate-middle)
 
 ## Example use case
 
