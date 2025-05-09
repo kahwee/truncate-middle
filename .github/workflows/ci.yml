@@ -24,7 +24,12 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
 
-      - run: npm ci
+      # Fix for npm platform-specific dependencies bug
+      - name: Clean install with platform fix
+        run: |
+          rm -rf node_modules package-lock.json
+          npm install
+
       - run: npm run lint
       - run: npm run typecheck
       - run: npm run coverage
