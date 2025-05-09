@@ -8,7 +8,7 @@
  * @param truncateStr - String that replaces the truncated portion
  * @returns Truncated string. Defaults to '&hellip;' if unspecified
  */
-export default function truncateMiddle(
+export function truncateMiddle(
   str: string | null | undefined,
   frontLen: number = 0,
   backLen: number = 0,
@@ -36,3 +36,6 @@ export default function truncateMiddle(
     return str.slice(0, frontLength) + truncateStr + str.slice(strLen - backLength);
   }
 }
+
+// For backwards compatibility with default import
+export default truncateMiddle;

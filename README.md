@@ -34,7 +34,11 @@ pnpm add truncate-middle
 ### ESM (recommended)
 
 ```js
+// Default import (recommended)
 import truncateMiddle from "truncate-middle";
+
+// Or named import
+import { truncateMiddle } from "truncate-middle";
 
 // Basic usage
 truncateMiddle("the quick brown", 5, 3, "...");
@@ -44,7 +48,11 @@ truncateMiddle("the quick brown", 5, 3, "...");
 ### CommonJS
 
 ```js
+// Default export
 const truncateMiddle = require("truncate-middle");
+
+// Or destructured named export
+const { truncateMiddle } = require("truncate-middle");
 
 // Basic usage
 truncateMiddle("the quick brown", 5, 3, "...");

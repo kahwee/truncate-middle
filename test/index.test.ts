@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import truncateMiddle from "../src/index";
+import defaultTruncateMiddle, { truncateMiddle } from "../src/index";
 
 describe("truncateMiddle", () => {
   it("should perform a basic test", () => {
@@ -32,5 +32,10 @@ describe("truncateMiddle", () => {
 
   it("should handle decimal parameters", () => {
     expect(truncateMiddle("the quick brown", 3.7, 4.2, "...")).toBe("the ...rown");
+  });
+
+  it("should work with both default and named exports", () => {
+    expect(defaultTruncateMiddle).toBe(truncateMiddle);
+    expect(defaultTruncateMiddle("test", 1, 1)).toBe(truncateMiddle("test", 1, 1));
   });
 });
