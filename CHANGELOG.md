@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.0.1 (2025-05-08)
+
+### Improvements
+
+- Updated CI pipeline to use Node.js v20.x and v22.x
+- Updated `@types/node` to version 22.x
+- Patch version bump for maintenance updates
+
 ## 2.0.0 (2025-03-01)
 
 ### Breaking Changes
