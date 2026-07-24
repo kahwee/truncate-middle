@@ -14,7 +14,7 @@ jobs:
         node-version: [24.x]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 2
 
@@ -24,11 +24,8 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
 
-      # Fix for npm platform-specific dependencies bug
-      - name: Clean install with platform fix
-        run: |
-          rm -rf node_modules package-lock.json
-          npm install
+      - name: Install dependencies
+        run: npm ci
 
       - run: npm run lint
       - run: npm run typecheck
