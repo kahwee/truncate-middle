@@ -16,6 +16,10 @@ const display = truncateMiddle(book, 30, 16, "...");
 // You get 'America Again: Re-becoming the...(978-0446583978)'
 ```
 
+## Requirements
+
+Node.js 18 or newer is supported.
+
 ## Installation
 
 ```sh

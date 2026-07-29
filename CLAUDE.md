@@ -9,7 +9,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Lint & fix: `npm run lint:fix`
 - Format: `npm run format`
 - Test: `npm run test`
-- Run single test: `npx vitest run -t "test description"`
+- Run single test: `vitest run -t "test description"`
 - Type check: `npm run typecheck`
 - Coverage: `npm run coverage`
 
@@ -52,3 +52,8 @@ function truncateMiddle(
 - `truncateStr`: String that replaces the truncated portion (defaults to `&hellip;`)
 
 The function handles various edge cases like null/undefined inputs and strings shorter than the combined front and back lengths.
+## Dependency maintenance
+
+- The canonical package manager is npm; use `npm ci` with the committed `package-lock.json`.
+- CI targets Node.js 26.x, while the package remains compatible with Node.js 18 and newer.
+- TypeScript remains on the latest TypeScript 6 release because `typescript-eslint` currently requires TypeScript below 6.1.
