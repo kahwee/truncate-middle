@@ -1,10 +1,17 @@
 # Changelog
 
+## Unreleased
+
+### Maintenance
+
+- CI and `.nvmrc` target Node.js 26.x (package still supports Node.js 18+)
+- Dev dependency patch bumps: `@types/node`, `eslint`, `prettier`
+
 ## 2.0.1 (2025-05-08)
 
 ### Improvements
 
-- Updated CI pipeline to use Node.js v20.x and v22.x
+- Updated CI pipeline to use Node.js v20.x and v22.x (later moved to 26.x)
 - Updated `@types/node` to version 22.x
 - Patch version bump for maintenance updates
 
