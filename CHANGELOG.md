@@ -1,7 +1,9 @@
 # Changelog
 
-## 2.0.2 (unreleased)
+## 2.0.3 (unreleased)
 
+- Refresh Vitest and its coverage package to 5.0.2. Keep TypeScript 6 until
+  typescript-eslint supports TypeScript 7.
 - Refresh Node types to 26.6.3, Prettier to 3.9.9, and typescript-eslint to 8.70.1.
 
 - Correct the CommonJS usage example to destructure the function from the exports object.
