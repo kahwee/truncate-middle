@@ -1,110 +1,101 @@
 # truncate-middle
 
-Truncates strings in the middle. Useful when important information is at both the beginning and end of the string.
+Keep both ends of a string while shortening its middle. Useful for file paths,
+identifiers, and titles whose suffix still matters.
 
-[![npm version](https://badge.fury.io/js/truncate-middle.svg)](http://badge.fury.io/js/truncate-middle)
+[![npm version](https://badge.fury.io/js/truncate-middle.svg)](https://www.npmjs.com/package/truncate-middle)
 [![CI](https://github.com/kahwee/truncate-middle/actions/workflows/ci.yml/badge.svg)](https://github.com/kahwee/truncate-middle/actions/workflows/ci.yml)
-[![codecov](https://codecov.io/gh/kahwee/truncate-middle/branch/main/graph/badge.svg)](https://codecov.io/gh/kahwee/truncate-middle)
 
-## Example use case
-
-```js
-const book =
-  "America Again: Re-becoming the Greatness We Never Weren't by Stephen Colbert (978-0446583978)";
-import truncateMiddle from "truncate-middle";
-const display = truncateMiddle(book, 30, 16, "...");
-// You get 'America Again: Re-becoming the...(978-0446583978)'
-```
-
-## Requirements
-
-Node.js 18 or newer is supported.
-
-## Installation
+## Install
 
 ```sh
-# npm
 npm install truncate-middle
-
-# yarn
-yarn add truncate-middle
-
-# pnpm
-pnpm add truncate-middle
 ```
 
-## Usage
+The package supports Node.js 18+ and ships ESM, CommonJS, and TypeScript types.
 
-### ESM (recommended)
+## Use
 
 ```js
-// Default import (recommended)
 import truncateMiddle from "truncate-middle";
 
-// Or named import
-import { truncateMiddle } from "truncate-middle";
+truncateMiddle("reports/2026/september/invoice.pdf", 8, 11, "…");
+// => 'reports/…invoice.pdf'
 
-// Basic usage
 truncateMiddle("the quick brown", 5, 3, "...");
 // => 'the q...own'
+
+truncateMiddle("short", 5, 3, "…");
+// => 'short'
+
+truncateMiddle(null, 5, 3, "…");
+// => ''
 ```
 
-### CommonJS
+A named ESM import is also available:
 
 ```js
-// Default export
-const truncateMiddle = require("truncate-middle");
+import { truncateMiddle } from "truncate-middle";
+```
 
-// Or destructured named export
+For CommonJS, destructure the named export. `require()` returns an exports object,
+not the function itself:
+
+```js
 const { truncateMiddle } = require("truncate-middle");
 
-// Basic usage
 truncateMiddle("the quick brown", 5, 3, "...");
 // => 'the q...own'
 ```
 
-### Examples
-
-Default behavior (no truncation):
-
-```js
-truncateMiddle("the quick brown");
-// => 'the quick brown'
-```
-
-Specifying a front length of 5:
-
-```js
-truncateMiddle("the quick brown", 5);
-// => 'the q&hellip;'
-```
-
-Specifying a front length of 5 and back length of 3:
-
-```js
-truncateMiddle("the quick brown", 5, 3);
-// => 'the q&hellip;own'
-```
-
-When the string is short enough that no truncation is needed:
-
-```js
-truncateMiddle("the quick brown", 50, 50);
-// => 'the quick brown'
-```
+The same function is also available as `require("truncate-middle").default`.
 
 ## API
 
-### truncateMiddle(str, frontLen, backLen, truncateStr)
+`truncateMiddle(str, frontLen = 0, backLen = 0, truncateStr = "&hellip;")`
 
-| Parameter   | Type                        | Description                                | Default    |
-| ----------- | --------------------------- | ------------------------------------------ | ---------- |
-| str         | string \| null \| undefined | String to be truncated                     | -          |
-| frontLen    | number                      | Number of characters to keep at the front  | 0          |
-| backLen     | number                      | Number of characters to keep at the back   | 0          |
-| truncateStr | string                      | String that replaces the truncated portion | '&hellip;' |
+| Argument      | Meaning                                                          |
+| ------------- | ---------------------------------------------------------------- |
+| `str`         | String to shorten; `null` and `undefined` return an empty string |
+| `frontLen`    | Number of UTF-16 code units to keep at the beginning             |
+| `backLen`     | Number of UTF-16 code units to keep at the end                   |
+| `truncateStr` | Text inserted between the retained parts                         |
 
-Returns: The truncated string.
+Use nonnegative finite lengths. Fractional lengths are rounded with `Math.round`.
+If both lengths are zero, or the retained lengths cover the input, the original
+string is returned. The separator is additional to the two retained lengths;
+these arguments do not specify a maximum output length.
+
+The default separator is the literal text `&hellip;`. For plain text, React, or
+terminal output, pass `"…"` or `"..."` explicitly:
+
+```js
+import truncateMiddle from "truncate-middle";
+
+truncateMiddle("the quick brown", 5);
+// => 'the q&hellip;'
+
+truncateMiddle("the quick brown", 5, 0, "…");
+// => 'the q…'
+```
+
+Lengths follow JavaScript string slicing, so a boundary can split an emoji or a
+combined character. This utility does not perform grapheme-aware truncation.
+
+## Develop
+
+Use the development Node version in `.nvmrc` and the committed npm lockfile:
+
+```sh
+npm ci
+npm run lint
+npm run typecheck
+npm test
+npm run build
+```
+
+Use `npm run coverage` for the coverage report. Source is in `src/index.ts`, tests
+in `test/index.test.ts`, and release notes in [CHANGELOG.md](CHANGELOG.md).
 
 ## License
 

@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.0.2 (unreleased)
+
+- Refresh Node types to 26.6.3, Prettier to 3.9.9, and typescript-eslint to 8.70.1.
+
+- Correct the CommonJS usage example to destructure the function from the exports object.
+- Add file-path and plain-text examples; explain separator length and UTF-16 boundaries.
+- Consolidate agent guidance in AGENTS.md.
+
 ## Unreleased
 
 ### Maintenance
