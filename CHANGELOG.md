@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.0.4 (unreleased)
+
+- Refresh typescript-eslint to 8.71.0, resolve the brace-expansion advisory, and update GitHub Actions.
+
 ## 2.0.3 (unreleased)
 
 - Refresh Vitest and its coverage package to 5.0.2. Keep TypeScript 6 until
