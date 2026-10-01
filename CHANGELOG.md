@@ -2,6 +2,7 @@
 
 ## 2.0.4 (unreleased)
 
+- Check built ESM and CommonJS package exports on Node.js 22, 24, and 26 in CI.
 - Refresh typescript-eslint to 8.71.0, resolve the brace-expansion advisory, and update GitHub Actions.
 
 ## 2.0.3 (unreleased)

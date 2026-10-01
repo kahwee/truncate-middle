@@ -92,10 +92,14 @@ npm run lint
 npm run typecheck
 npm test
 npm run build
+node scripts/test-runtime.mjs
 ```
 
 Use `npm run coverage` for the coverage report. Source is in `src/index.ts`, tests
 in `test/index.test.ts`, and release notes in [CHANGELOG.md](CHANGELOG.md).
+CI builds with Node.js 26 and checks the built ESM and CommonJS exports with
+Node.js 22, 24, and 26, without installing development tools in the runtime jobs.
+Node.js 18 remains the declared runtime minimum; it is not currently verified by CI.
 
 ## License
 
