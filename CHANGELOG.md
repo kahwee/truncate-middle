@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.0.5 (unreleased)
+
+- Replace ESLint and Prettier with Biome.
+- Use pnpm for dependency installation, scripts, and GitHub Actions.
+- Upgrade to TypeScript 7 and emit declarations with tsc.
+
 ## 2.0.4 (unreleased)
 
 - Check built ESM and CommonJS package exports on Node.js 22, 24, and 26 in CI.

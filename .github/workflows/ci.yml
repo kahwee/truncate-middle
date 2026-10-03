@@ -21,20 +21,22 @@ jobs:
         with:
           fetch-depth: 2
 
+      - uses: pnpm/action-setup@v6.1.0
+
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v7.0.0
         with:
           node-version: ${{ matrix.node-version }}
-          cache: "npm"
+          cache: "pnpm"
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
-      - run: npm audit --audit-level=high
-      - run: npm run lint
-      - run: npm run typecheck
-      - run: npm run coverage
-      - run: npm run build
+      - run: pnpm audit --audit-level=high
+      - run: pnpm run lint
+      - run: pnpm run typecheck
+      - run: pnpm run coverage
+      - run: pnpm run build
       - run: node scripts/test-runtime.mjs
 
       - name: Upload built package

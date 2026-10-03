@@ -1,6 +1,6 @@
 {
   "name": "truncate-middle",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "description": "Truncates in the middle.",
   "type": "module",
   "main": "dist/index.js",
@@ -17,30 +17,24 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup",
-    "lint": "eslint .",
-    "lint:fix": "npm run lint -- --fix",
-    "format": "prettier --write .",
+    "build": "tsup && tsc --emitDeclarationOnly",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write .",
     "test": "vitest run",
     "coverage": "vitest run --coverage",
     "typecheck": "tsc --noEmit",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "pnpm run build"
   },
   "author": "KahWee Teng <t@kw.sg> (http://kw.sg/)",
   "license": "MIT",
   "devDependencies": {
-    "@eslint/js": "^10.0.1",
     "@types/node": "^26.6.3",
     "@vitest/coverage-v8": "^5.0.2",
-    "eslint": "^10.11.0",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-prettier": "^5.5.6",
-    "globals": "^17.12.0",
-    "prettier": "^3.9.9",
     "tsup": "^8.5.1",
-    "typescript": "^6.0.3",
-    "typescript-eslint": "^8.70.1",
-    "vitest": "^5.0.2"
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.2",
+    "@biomejs/biome": "^2.5.15"
   },
   "repository": {
     "type": "git",
@@ -54,7 +48,5 @@
   "engines": {
     "node": ">=18"
   },
-  "overrides": {
-    "esbuild": "^0.28.2"
-  }
+  "packageManager": "pnpm@12.8.1"
 }
