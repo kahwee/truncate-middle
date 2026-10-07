@@ -104,3 +104,7 @@ Node.js 18 remains the declared runtime minimum; it is not currently verified by
 ## License
 
 MIT
+
+## CI maintenance
+
+[GitHub Actions maintenance](.github/ACTIONS.md) covers workflows, parallel checks, action versions, and weekly updates.
