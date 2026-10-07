@@ -32,10 +32,12 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - run: pnpm audit --audit-level=high
-      - run: pnpm run lint
-      - run: pnpm run typecheck
-      - run: pnpm run coverage
+      # Independent checks must all pass before building the shared runtime artifact.
+      - parallel:
+          - run: pnpm audit --audit-level=high
+          - run: pnpm run lint
+          - run: pnpm run typecheck
+          - run: pnpm run coverage
       - run: pnpm run build
       - run: node scripts/test-runtime.mjs
 
