@@ -1,6 +1,6 @@
 {
   "name": "truncate-middle",
-  "version": "2.0.5",
+  "version": "2.0.6",
   "description": "Truncates in the middle.",
   "type": "module",
   "main": "dist/index.js",
@@ -29,11 +29,11 @@
   "author": "KahWee Teng <t@kw.sg> (http://kw.sg/)",
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "^26.6.3",
-    "@vitest/coverage-v8": "^5.0.2",
+    "@types/node": "^26.6.4",
+    "@vitest/coverage-v8": "^5.0.3",
     "tsup": "^8.5.1",
     "typescript": "^7.0.2",
-    "vitest": "^5.0.2",
+    "vitest": "^5.0.3",
     "@biomejs/biome": "^2.5.15"
   },
   "repository": {

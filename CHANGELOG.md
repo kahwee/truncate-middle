@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.0.6 (unreleased)
+
+- Update compatible development tooling and refresh dependency security fixes.
+
 ## 2.0.5 (unreleased)
 
 - Replace ESLint and Prettier with Biome.
