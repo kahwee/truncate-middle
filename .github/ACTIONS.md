@@ -23,9 +23,9 @@ Versions below match the current workflow and composite-action references. SHA-p
 | Action | Reference |
 | --- | --- |
 | [actions/checkout](https://github.com/actions/checkout) | `v7.0.1` |
-| [actions/download-artifact](https://github.com/actions/download-artifact) | `v8.0.1` |
-| [actions/setup-node](https://github.com/actions/setup-node) | `v7.0.0` |
-| [actions/upload-artifact](https://github.com/actions/upload-artifact) | `v7.0.1` |
+| [actions/download-artifact](https://github.com/actions/download-artifact) | `v8.0.2` |
+| [actions/setup-node](https://github.com/actions/setup-node) | `v7.1.0` |
+| [actions/upload-artifact](https://github.com/actions/upload-artifact) | `v7.0.2` |
 | [codecov/codecov-action](https://github.com/codecov/codecov-action) | `v7.1.1` |
 | [pnpm/action-setup](https://github.com/pnpm/action-setup) | `v6.1.0` |
 
