@@ -43,10 +43,15 @@ jobs:
       - name: Check and build
         run: pnpm run lint && pnpm run typecheck && pnpm run coverage && pnpm run build && node scripts/test-runtime.mjs
       - name: Pack the checked output
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
         run: |
           mkdir -p "$RUNNER_TEMP/release"
           pnpm pack --out "$RUNNER_TEMP/release/package.tgz"
+          node scripts/release-check.mjs "$RELEASE_TAG"
           tar -tzf "$RUNNER_TEMP"/release/*.tgz
+          tar -xOf "$RUNNER_TEMP"/release/*.tgz package/package.json > "$RUNNER_TEMP/packed-package.json"
+          node --input-type=module -e 'import { readFileSync } from "node:fs"; const source = JSON.parse(readFileSync("package.json")); const packed = JSON.parse(readFileSync(process.env.RUNNER_TEMP + "/packed-package.json")); if (packed.name !== source.name || packed.version !== source.version || packed.private) throw new Error("Packed package identity differs from checked source")'
       - name: Publish checked tarball with npm OIDC
         if: steps.metadata.outputs.should_publish == 'true'
         working-directory: ${{ runner.temp }}
