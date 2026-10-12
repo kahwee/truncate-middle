@@ -43,6 +43,13 @@ jobs:
           - run: pnpm run coverage
       - run: pnpm run build
       - run: node scripts/test-runtime.mjs
+      - name: Pack checked package
+        run: pnpm pack --out "$RUNNER_TEMP/truncate-middle-check.tgz"
+
+      - name: Read-only publish dry run of the checked tarball
+        working-directory: ${{ runner.temp }}
+        run: npm publish "$RUNNER_TEMP/truncate-middle-check.tgz" --dry-run --ignore-scripts --access public --tag latest
+
 
       - name: Upload built package
         uses: actions/upload-artifact@v7.0.2

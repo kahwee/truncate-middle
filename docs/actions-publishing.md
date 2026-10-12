@@ -37,3 +37,22 @@ See [npm trusted publishing](https://docs.npmjs.com/trusted-publishers/).
 No publishing action or registry trust was enabled by this change. Run the full
 existing CI after review. Authentication remains untested until a separately
 authorized real release; a package dry run does not validate OIDC exchange.
+
+## First package activation checkpoint
+
+The proposal's checkout, Node and pnpm actions are pinned to full commit SHAs.
+Existing read-only CI packs the checked output and runs `npm publish --dry-run`
+from the runner temporary directory with lifecycle scripts disabled. This uploads
+nothing and does not validate OIDC authentication or change dist-tags.
+
+Public npm metadata currently lists `kahwee` as maintainer. Private trusted-publisher
+settings have not been verified: no authorized local browser connection was
+available during this checkpoint. Before configuring anything, read back existing
+npm settings and preserve any owner changes. If needed, the owner completes normal
+npm login/2FA through the browser; never send passwords, OTPs or token values in chat.
+
+After explicit approval, merge reviewed code, move the proposal to
+`.github/workflows/publish.yml`, verify default-branch CI, and bind only the identity
+listed above. No actual release is authorized by an authentication dry run: do not
+create a tag, release or registry version to test setup. Existing registry-version
+skips are not proof of matching source/tarball contents.
