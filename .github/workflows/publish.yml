@@ -1,4 +1,4 @@
-# PROPOSAL ONLY. Move to .github/workflows/publish.yml only after access approval.
+# npm trusted publishing; approved for kahwee/truncate-middle only.
 name: Publish npm package
 on:
   release:

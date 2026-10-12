@@ -10,9 +10,10 @@ Run `node --test scripts/check-release-guard.mjs` and
 
 ## Approval proposal
 
-The complete workflow is in [publish.yml](../.github/release-proposals/publish.yml).
-It is outside `.github/workflows` and cannot run. After explicit approval, move it
-to `.github/workflows/publish.yml` (replacing an existing publisher where present).
+The complete workflow is in [publish.yml](../.github/workflows/publish.yml).
+The owner approved activation of this exact workflow and npm binding. The workflow
+has moved to `.github/workflows/publish.yml`; private npm trust state must still be
+read back through normal authenticated npm settings before configuring it.
 It uses published GitHub releases, checks the exact tagged source against successful
 CI, installs the frozen lockfile, checks/builds, packs and publishes the checked
 tarball. It does not create versions, tags or GitHub releases. Stable releases use
@@ -34,7 +35,8 @@ secret presence and a local login do not prove CI publish access. Do not revoke
 existing credentials or change package security settings as part of this proposal.
 See [npm trusted publishing](https://docs.npmjs.com/trusted-publishers/).
 
-No publishing action or registry trust was enabled by this change. Run the full
+Workflow activation is approved; registry trust configuration and actual publication
+are tracked separately. No package version was published to test setup. Run the full
 existing CI after review. Authentication remains untested until a separately
 authorized real release; a package dry run does not validate OIDC exchange.
 
