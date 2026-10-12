@@ -21,6 +21,9 @@ jobs:
         with:
           fetch-depth: 2
 
+      - name: Test release metadata guard
+        run: node --test scripts/release-check.test.mjs
+
       - uses: pnpm/action-setup@v6.1.0
 
       - name: Use Node.js ${{ matrix.node-version }}
