@@ -1,0 +1,67 @@
+# npm trusted publishing; approved for kahwee/truncate-middle only.
+name: Publish npm package
+on:
+  release:
+    types: [published]
+permissions:
+  contents: read
+concurrency:
+  group: npm-release-${{ github.event.release.tag_name }}
+  cancel-in-progress: false
+jobs:
+  publish:
+    if: ${{ !github.event.release.prerelease }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      actions: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.release.tag_name }}
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 26
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+      - name: Validate metadata and registry state
+        id: metadata
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          node --test scripts/check-release-guard.mjs
+          node scripts/release-check.mjs "$RELEASE_TAG" --registry
+      - name: Require successful CI on this exact source
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          source_sha="$(git rev-parse HEAD)"
+          test "$source_sha" = "$(git rev-parse "$GITHUB_SHA^{commit}")"
+          git merge-base --is-ancestor "$source_sha" "origin/main"
+          gh api "repos/$GITHUB_REPOSITORY/actions/workflows/ci.yml/runs?head_sha=$source_sha&per_page=100" > "$RUNNER_TEMP/ci.json"
+          jq -e --arg sha "$source_sha" '[.workflow_runs[] | select(.head_sha == $sha and .conclusion == "success" and .event == "push" and .head_branch == "main")] | length > 0' "$RUNNER_TEMP/ci.json"
+      - run: pnpm install --frozen-lockfile
+      - name: Check and build
+        run: pnpm run lint && pnpm run typecheck && pnpm run coverage && pnpm run build && node scripts/test-runtime.mjs
+      - name: Pack the checked output
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/release"
+          pnpm pack --out "$RUNNER_TEMP/release/package.tgz"
+          node scripts/release-check.mjs "$RELEASE_TAG"
+          tar -tzf "$RUNNER_TEMP"/release/*.tgz
+          tar -xOf "$RUNNER_TEMP"/release/*.tgz package/package.json > "$RUNNER_TEMP/packed-package.json"
+          node --input-type=module -e 'import { readFileSync } from "node:fs"; const source = JSON.parse(readFileSync("package.json")); const packed = JSON.parse(readFileSync(process.env.RUNNER_TEMP + "/packed-package.json")); if (packed.name !== source.name || packed.version !== source.version || packed.private) throw new Error("Packed package identity differs from checked source")'
+      - name: Publish checked tarball with npm OIDC
+        if: steps.metadata.outputs.should_publish == 'true'
+        working-directory: ${{ runner.temp }}
+        env:
+          PRERELEASE: ${{ github.event.release.prerelease }}
+        run: |
+          node -e 'const v=process.argv[1].split(".").map(Number); if(v[0]<11 || (v[0]===11 && (v[1]<5 || (v[1]===5 && v[2]<1)))) throw new Error("npm >=11.5.1 required")' "$(npm --version)"
+          dist_tag=latest
+          if [ "$PRERELEASE" = true ]; then dist_tag=next; fi
+          npm publish "$RUNNER_TEMP"/release/*.tgz --ignore-scripts --access public --tag "$dist_tag"
