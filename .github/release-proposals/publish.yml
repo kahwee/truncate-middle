@@ -38,7 +38,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           source_sha="$(git rev-parse HEAD)"
-          test "$source_sha" = "$GITHUB_SHA"
+          test "$source_sha" = "$(git rev-parse "$GITHUB_SHA^{commit}")"
           git merge-base --is-ancestor "$source_sha" "origin/main"
           gh api "repos/$GITHUB_REPOSITORY/actions/workflows/ci.yml/runs?head_sha=$source_sha&per_page=100" > "$RUNNER_TEMP/ci.json"
           jq -e --arg sha "$source_sha" '[.workflow_runs[] | select(.head_sha == $sha and .conclusion == "success" and .event == "push" and .head_branch == "main")] | length > 0' "$RUNNER_TEMP/ci.json"
