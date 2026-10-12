@@ -22,7 +22,7 @@ jobs:
           fetch-depth: 2
 
       - name: Test release metadata guard
-        run: node --test scripts/release-check.test.mjs
+        run: node --test scripts/check-release-guard.mjs
 
       - uses: pnpm/action-setup@v6.1.0
 
