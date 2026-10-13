@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.0.7 (unreleased)
+
+- Refresh Node.js development types to 26.6.5.
+
 ## 2.0.6 (unreleased)
 
 - Update compatible development tooling and refresh dependency security fixes.
