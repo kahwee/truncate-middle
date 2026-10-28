@@ -6,7 +6,7 @@ response means the version is immutable; it never forces another upload.
 
 Run `node --test scripts/check-release-guard.mjs` and
 `node scripts/release-check.mjs v<version>` without publishing.
-`--registry` adds a read-only check of the exact public npm version.
+`--registry <tarball>` adds a read-only check of the public npm metadata and archive integrity.
 
 ## Approval proposal
 
@@ -56,5 +56,19 @@ npm login/2FA through the browser; never send passwords, OTPs or token values in
 After explicit approval, merge reviewed code, move the proposal to
 `.github/workflows/publish.yml`, verify default-branch CI, and bind only the identity
 listed above. No actual release is authorized by an authentication dry run: do not
-create a tag, release or registry version to test setup. Existing registry-version
-skips are not proof of matching source/tarball contents.
+create a tag, release or registry version to test setup. Existing registry-version skips require matching tarball integrity.
+
+Publication runs share one package concurrency group with `queue: max` and do not
+cancel a running publisher. GitHub retains up to 100 pending runs; additional runs
+are canceled when the queue is full. Runs wait in order of arrival at the group,
+which is not guaranteed to match release-version order. The registry guard therefore
+rejects a new version that is not newer than `latest`. A rerun skips upload only if
+the existing version's SHA-512 integrity matches the checked tarball. If `latest`
+is already newer, it remains untouched; no dist-tag command is run.
+
+After upload or an exact-archive rerun, readback checks the registry identity,
+SHA-512 integrity, and that `latest` is at least the release version. It makes at
+most six reads, five seconds apart, with a 15-second timeout per read. A missing
+package/version or a still-older `latest` can propagate during that window; HTTP
+errors other than 404, malformed metadata, identity or integrity mismatches fail
+immediately. Exhaustion fails the job and requires investigation or a safe rerun.

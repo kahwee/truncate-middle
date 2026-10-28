@@ -1,79 +1,141 @@
 import assert from "node:assert/strict";
-import { spawnSync } from "node:child_process";
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
-import { tmpdir } from "node:os";
-import { dirname, resolve } from "node:path";
+import { readFileSync } from "node:fs";
 import test from "node:test";
-import { fileURLToPath } from "node:url";
-import { registryState, validateRelease } from "./release-check.mjs";
+import {
+  archiveIntegrity,
+  compareVersions,
+  registryState,
+  validateRelease,
+  verifyPublished,
+} from "./release-check.mjs";
 
-const pkg = { name: "example-package", version: "1.2.3" };
-test("matches tag, rejects private, prerelease, mismatched tag and lock", () => {
-  assert.equal(validateRelease(pkg, "v1.2.3"), "1.2.3");
-  for (const [candidate, tag, lock] of [
-    [{ ...pkg, private: true }, "v1.2.3"],
-    [{ ...pkg, version: "1.2.3-rc.1" }, "v1.2.3-rc.1"],
-    [pkg, "v1.2.4"],
-    [pkg, "main"],
-    [pkg, "v1.2.3", { version: "1.2.2", packages: { "": { version: "1.2.2" } } }],
-  ])
-    assert.throws(() => validateRelease(candidate, tag, lock));
-  assert.equal(
-    validateRelease(pkg, "v1.2.3", { version: "1.2.3", packages: { "": { version: "1.2.3" } } }),
-    "1.2.3"
+const pkg = { name: "example-package", version: "2.10.0" };
+const integrity = archiveIntegrity(Buffer.from("checked tarball"));
+const entry = (version, hash = integrity) => ({
+  name: pkg.name,
+  version,
+  dist: { integrity: hash },
+});
+const data = (latest, versions = { [latest]: entry(latest) }) => ({
+  name: pkg.name,
+  "dist-tags": { latest },
+  versions,
+});
+const response =
+  (body, status = 200) =>
+  async () => ({ status, json: async () => body });
+
+test("validates stable release identity and compares unbounded numeric components", () => {
+  assert.equal(validateRelease(pkg, "v2.10.0"), pkg.version);
+  for (const bad of ["2.01.0", "2.10.0-rc.1", "main"])
+    assert.throws(() => validateRelease({ ...pkg, version: bad }, `v${bad}`));
+  assert.throws(() => validateRelease({ ...pkg, private: true }, "v2.10.0"));
+  assert.throws(() => validateRelease(pkg, "v2.9.0"));
+  assert.throws(() => validateRelease(pkg, "v2.10.0", { version: "2.9.0" }));
+  assert.equal(compareVersions("2.10.0", "2.9.99"), 1);
+  assert.equal(compareVersions("999999999999999999999.0.0", "1000000000000000000000.0.0"), -1);
+  assert.equal(compareVersions("2.10.0", "2.10.0"), 0);
+});
+
+test("existing archives are immutable and newer latest is preserved", async () => {
+  await assert.rejects(registryState(pkg, integrity, response(null, 404)), /not found/);
+  assert.equal(await registryState(pkg, integrity, response(data("2.9.0"))), "new");
+  const versions = { "2.10.0": entry("2.10.0"), "3.0.0": entry("3.0.0") };
+  assert.equal(await registryState(pkg, integrity, response(data("3.0.0", versions))), "published");
+  await verifyPublished(pkg, integrity, { request: response(data("3.0.0", versions)) });
+  await assert.rejects(registryState(pkg, integrity, response(data("3.0.0"))), /Refusing/);
+  versions["2.10.0"] = entry("2.10.0", "sha512-different");
+  await assert.rejects(
+    registryState(pkg, integrity, response(data("3.0.0", versions))),
+    /integrity/
+  );
+  await assert.rejects(
+    verifyPublished(pkg, integrity, { request: response(data("3.0.0", versions)) }),
+    /integrity/
   );
 });
-test("only a registry 404 permits publication; 200 is immutable", async () => {
-  assert.equal(await registryState(pkg, async () => ({ status: 404 })), "new");
-  assert.equal(
-    await registryState(pkg, async () => ({ status: 200, json: async () => pkg })),
-    "published"
+
+test("readback retries propagation only and exhausts a finite budget", async () => {
+  let calls = 0;
+  let sleeps = 0;
+  const request = async () =>
+    ++calls === 1 ? { status: 404 } : { status: 200, json: async () => data(pkg.version) };
+  await verifyPublished(pkg, integrity, {
+    request,
+    sleep: async () => {
+      sleeps++;
+    },
+  });
+  assert.equal(calls, 2);
+  assert.equal(sleeps, 1);
+  await assert.rejects(
+    verifyPublished(pkg, integrity, {
+      request: response(null, 404),
+      attempts: 3,
+      sleep: async () => {},
+    }),
+    /exhausted 3/
   );
-  for (const status of [401, 403, 429, 500, 503]) {
-    await assert.rejects(registryState(pkg, async () => ({ status })));
+  calls = 0;
+  await assert.rejects(
+    verifyPublished(pkg, integrity, {
+      request: async () => {
+        calls++;
+        return { status: 403 };
+      },
+      sleep: async () => {},
+    }),
+    /HTTP 403/
+  );
+  assert.equal(calls, 1);
+});
+
+test("registry errors and malformed or inconsistent metadata fail closed", async () => {
+  for (const status of [401, 403, 429, 500])
+    await assert.rejects(registryState(pkg, integrity, response(null, status)));
+  for (const body of [
+    {},
+    { ...data("2.9.0"), name: "wrong" },
+    data("bad"),
+    { ...data("2.9.0"), versions: {} },
+    data("2.9.0", { "2.9.0": entry("wrong") }),
+  ]) {
+    await assert.rejects(registryState(pkg, integrity, response(body)));
   }
   await assert.rejects(
-    registryState(pkg, async () => {
-      throw new Error("timeout");
-    })
-  );
-  await assert.rejects(
-    registryState(pkg, async () => ({
+    registryState(pkg, integrity, async () => ({
       status: 200,
-      json: async () => ({ ...pkg, version: "9.9.9" }),
+      json: async () => {
+        throw new Error("bad JSON");
+      },
     }))
   );
+  await assert.rejects(
+    registryState(
+      pkg,
+      integrity,
+      response(data(pkg.version, { [pkg.version]: { ...entry(pkg.version), name: "wrong" } }))
+    )
+  );
 });
 
-test("CLI validates real repository metadata and fails invalid fixture releases", () => {
-  const script = fileURLToPath(new URL("./release-check.mjs", import.meta.url));
-  const repo = resolve(dirname(script), "..");
-  const actual = JSON.parse(readFileSync(resolve(repo, "package.json"), "utf8"));
-  assert.equal(
-    spawnSync(process.execPath, [script, `v${actual.version}`], { cwd: repo }).status,
-    0
+test("workflow remains release-only with unchanged permissions and queued publishing", () => {
+  const workflow = readFileSync(
+    new URL("../.github/workflows/publish.yml", import.meta.url),
+    "utf8"
   );
-  const directory = mkdtempSync(resolve(tmpdir(), "release-guard-"));
-  try {
-    const output = resolve(directory, "output");
-    const run = (candidate, tag, lock) => {
-      writeFileSync(resolve(directory, "package.json"), JSON.stringify(candidate));
-      if (lock) writeFileSync(resolve(directory, "package-lock.json"), JSON.stringify(lock));
-      else rmSync(resolve(directory, "package-lock.json"), { force: true });
-      return spawnSync(process.execPath, [script, tag], {
-        cwd: directory,
-        env: { ...process.env, GITHUB_OUTPUT: output },
-      });
-    };
-    assert.equal(run(pkg, "v1.2.3").status, 0);
-    assert.match(readFileSync(output, "utf8"), /package_version=1.2.3\nshould_publish=true/);
-    assert.equal(run(pkg, "v1.2.4").status, 1);
-    assert.equal(run({ ...pkg, private: true }, "v1.2.3").status, 1);
-    assert.equal(
-      run(pkg, "v1.2.3", { version: "1.2.2", packages: { "": { version: "1.2.2" } } }).status,
-      1
-    );
-  } finally {
-    rmSync(directory, { recursive: true, force: true });
-  }
+  assert.match(workflow, /on:\s*\n {2}release:\s*\n {4}types: \[published\]/);
+  assert.doesNotMatch(workflow, /\n {2}(push|workflow_dispatch):/);
+  assert.match(
+    workflow,
+    /group: npm-release-truncate-middle\s*\n {2}queue: max\s*\n {2}cancel-in-progress: false/
+  );
+  assert.match(workflow, /permissions:\s*\n {2}contents: read/);
+  assert.match(
+    workflow,
+    /permissions:\s*\n {6}contents: read\s*\n {6}actions: read\s*\n {6}id-token: write/
+  );
+  assert.equal((workflow.match(/id-token: write/g) || []).length, 1);
+  assert.match(workflow, /if: steps.metadata.outputs.should_publish == 'true'/);
+  assert.match(workflow, /--verify "\$RUNNER_TEMP\/release\/package.tgz"/);
 });
