@@ -1,7 +1,7 @@
 # truncate-middle
 
 Keep both ends of a string while shortening its middle. Zero runtime dependencies;
-ESM, CommonJS, and TypeScript types; Node.js 18+.
+ESM, CommonJS, and TypeScript types; Node.js 24+.
 
 ```sh
 npm install truncate-middle
@@ -17,7 +17,7 @@ truncateMiddle("reports/2026/september/invoice.pdf", 8, 11, "…");
 ```
 
 The default API counts UTF-16 code units, preserving its existing behavior.
-For complete emoji and combined characters, **2.1.0 (unreleased)** adds an opt-in API:
+For complete emoji and combined characters, **3.0.0 (unreleased candidate)** adds an opt-in API:
 
 ```js
 import { truncateMiddleGraphemes } from "truncate-middle";
@@ -28,11 +28,12 @@ truncateMiddleGraphemes("👩‍💻abcdef🇸🇬", 1, 1, "…");
 
 The opt-in API requires `Intl.Segmenter`; it never silently falls back to UTF-16.
 Both APIs default to the literal separator `"&hellip;"`. See the packed
-[API reference](docs/api.md) for bounds, nullish inputs, and CommonJS examples.
+[API reference](docs/api.md) for bounds, nullish inputs, CommonJS examples,
+and migration guidance.
 
 ## Develop
 
-Use Node.js 26 and the pinned pnpm 12.15.0; the built package still supports Node 18+.
+Use Node.js 26 and the pinned pnpm 12.15.0; the built package supports Node 24+.
 
 ```sh
 pnpm install --frozen-lockfile

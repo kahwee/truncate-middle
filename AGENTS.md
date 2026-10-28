@@ -5,8 +5,8 @@ This package exports zero-runtime-dependency string truncation utilities. Read
 
 - Use pnpm with `pnpm-lock.yaml`; install with `pnpm install --frozen-lockfile`.
   Use the pinned pnpm version in `package.json`. The development Node version in
-  `.nvmrc` is distinct from the package's Node 18+ runtime support; tsup 9 needs
-  Node 22.18+, 24.11+, or 26+ to build, not to consume the package.
+  `.nvmrc` is Node 26; package consumers require Node 24 or newer.
+  tsup 9 requires Node 24.11+ or 26+ for the supported development runtimes.
 - Preserve default and named ESM exports and both corresponding properties on
   the CommonJS exports object. Verify examples against a fresh build, including
   `require()`; do not assume a default export makes CommonJS directly callable.

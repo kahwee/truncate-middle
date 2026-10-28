@@ -1,6 +1,6 @@
 {
   "name": "truncate-middle",
-  "version": "2.1.0",
+  "version": "3.0.0",
   "description": "Truncates in the middle.",
   "type": "module",
   "main": "dist/index.js",
@@ -54,7 +54,7 @@
     "string"
   ],
   "engines": {
-    "node": ">=18"
+    "node": ">=24"
   },
   "packageManager": "pnpm@12.15.0"
 }

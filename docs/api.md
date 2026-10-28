@@ -2,7 +2,14 @@
 
 Both functions keep a prefix and suffix and insert a separator between them.
 The retained lengths do **not** include the separator and are not a maximum output length.
-The package has no runtime dependencies and supports Node.js 18+.
+The package has no runtime dependencies and supports Node.js 24+.
+
+## Migrating to 3.0.0
+
+Node.js consumers must upgrade to Node 24 or newer. The default UTF-16 API and
+existing exports retain their behavior; the grapheme API is opt-in and requires
+`Intl.Segmenter`. The browser output target is unchanged. This is a candidate,
+not a published release.
 
 ## Existing UTF-16 API
 
@@ -18,7 +25,7 @@ The package has no runtime dependencies and supports Node.js 18+.
 - `truncateStr` is inserted literally. The default `"&hellip;"` is text, not an
   automatic Unicode ellipsis. Pass `"…"`, `"..."`, or `""` for plain-text output.
 
-The default function is unchanged in 2.1.0, including its historical behavior for
+The default function is unchanged in 3.0.0, including its historical behavior for
 inputs outside the recommended bounds. It does not validate bounds or normalize text.
 UTF-16 slicing can split surrogate pairs or combining sequences:
 
@@ -33,7 +40,7 @@ truncateMiddle(null, 5, 3, "…"); // ""
 truncateMiddle("😀abcd", 1, 1, "…"); // "\ud83d…d" (split surrogate)
 ```
 
-## Opt-in grapheme API (2.1.0)
+## Opt-in grapheme API (3.0.0 candidate)
 
 `truncateMiddleGraphemes(str, frontLen = 0, backLen = 0, truncateStr = "&hellip;")`
 
@@ -68,7 +75,7 @@ truncateMiddleGraphemes("😀ab🚀", 0, 0, "…"); // "😀ab🚀"
 truncateMiddleGraphemes("😀ab🚀", 0, 1, "…"); // "…🚀"
 ```
 
-The host feature is available in standard tested Node 18/20/22/24/26 builds;
+The host feature is available in standard tested Node 24/26 builds;
 custom Intl builds and older browsers may lack it. Feature-detect
 `typeof Intl !== "undefined" && typeof Intl.Segmenter === "function"` when needed.
 See [Intl.Segmenter](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter)

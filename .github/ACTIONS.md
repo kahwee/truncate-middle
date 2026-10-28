@@ -15,7 +15,7 @@ Independent checks use GitHub Actions [native parallel steps](https://github.blo
 
 - [ci.yml](workflows/ci.yml), job `test`: `pnpm audit --audit-level=high`; `pnpm run lint`; `pnpm run typecheck`; `pnpm run coverage`.
 - [publish.yml](workflows/publish.yml), job `publish`: `pnpm run lint`; `pnpm run typecheck`; `pnpm run coverage`. Build, runtime checks, packing, and publication remain ordered.
-- The CI `runtime` matrix checks Node.js 18, 20, 22, 24, and 26 after downloading the shared checked build.
+- The CI `runtime` matrix checks Node.js 24 and 26 after downloading the shared checked build.
 
 Steps after a group wait for it to finish. Keep prerequisites before the group and dependent build, package, or deployment work afterward. Do not run commands that overwrite the same build directory or coverage output together. Parallel steps share the job workspace; they do not provide separate machines.
 

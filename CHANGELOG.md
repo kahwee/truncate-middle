@@ -1,14 +1,18 @@
 # Changelog
 
-## 2.1.0 (unreleased)
+## 3.0.0 (unreleased candidate)
+
+- Require Node.js 24 or newer; Node 18, 20, and 22 are no longer supported.
+  Browser output compatibility and the existing default truncation behavior remain unchanged.
+- This candidate supersedes the unshipped 2.1.0 proposal.
 
 - Add the named `truncateMiddleGraphemes` export to retain complete emoji, flags,
   and combining-character sequences using the host's `Intl.Segmenter`.
 - Validate finite, nonnegative lengths for the opt-in API, retain rounded counts
   and the literal `&hellip;` separator, and report unavailable segmentation explicitly.
 - Preserve the default `truncateMiddle` function and its UTF-16 slicing behavior,
-  existing ESM/CommonJS exports, Node.js 18+ support, and zero runtime dependencies.
-- Verify both APIs across Node.js 18, 20, 22, 24, and 26; package the detailed API
+  existing ESM/CommonJS exports and zero runtime dependencies.
+- Verify both APIs across Node.js 24 and 26; package the detailed API
   reference and changelog alongside a concise README.
 - Generate CommonJS-specific declarations from the same TypeScript output and
   test strict ESM/CommonJS consumers against an installed archive, fixing ESM-only
