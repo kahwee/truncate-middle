@@ -4,30 +4,33 @@ This guide describes the checked-in workflows. Follow each linked YAML file for 
 
 ## Workflows
 
-| Workflow | Events | Jobs |
-| --- | --- | --- |
-| [ci.yml](workflows/ci.yml) | `push`, `pull_request` | `test`, `runtime` |
+| Workflow                             | Events                     | Jobs                                           |
+| ------------------------------------ | -------------------------- | ---------------------------------------------- |
+| [ci.yml](workflows/ci.yml)           | `push`, `pull_request`     | `test`, `runtime`                              |
+| [publish.yml](workflows/publish.yml) | stable release `published` | `publish` (exact-source CI and registry gates) |
 
 ## Parallel steps
 
 Independent checks use GitHub Actions [native parallel steps](https://github.blog/changelog/2026-06-25-actions-steps-can-now-be-run-in-parallel/). The following groups run concurrently within a job:
 
 - [ci.yml](workflows/ci.yml), job `test`: `pnpm audit --audit-level=high`; `pnpm run lint`; `pnpm run typecheck`; `pnpm run coverage`.
+- [publish.yml](workflows/publish.yml), job `publish`: `pnpm run lint`; `pnpm run typecheck`; `pnpm run coverage`. Build, runtime checks, packing, and publication remain ordered.
+- The CI `runtime` matrix checks Node.js 18, 20, 22, 24, and 26 after downloading the shared checked build.
 
 Steps after a group wait for it to finish. Keep prerequisites before the group and dependent build, package, or deployment work afterward. Do not run commands that overwrite the same build directory or coverage output together. Parallel steps share the job workspace; they do not provide separate machines.
 
 ## Action versions
 
-Versions below match the current workflow and composite-action references. SHA-pinned actions remain pinned; compare their commit with the upstream stable release when updating.
+All external actions are pinned to the immutable commit of the stable release listed below. Compare each commit with the official upstream release when updating; keep the version comment.
 
-| Action | Reference |
-| --- | --- |
-| [actions/checkout](https://github.com/actions/checkout) | `v7.0.1` |
-| [actions/download-artifact](https://github.com/actions/download-artifact) | `v8.0.2` |
-| [actions/setup-node](https://github.com/actions/setup-node) | `v7.1.0` |
-| [actions/upload-artifact](https://github.com/actions/upload-artifact) | `v7.0.2` |
-| [codecov/codecov-action](https://github.com/codecov/codecov-action) | `v7.1.1` |
-| [pnpm/action-setup](https://github.com/pnpm/action-setup) | `v6.1.0` |
+| Action                                                                    | Reference |
+| ------------------------------------------------------------------------- | --------- |
+| [actions/checkout](https://github.com/actions/checkout)                   | `v7.0.1`  |
+| [actions/download-artifact](https://github.com/actions/download-artifact) | `v8.0.2`  |
+| [actions/setup-node](https://github.com/actions/setup-node)               | `v7.1.0`  |
+| [actions/upload-artifact](https://github.com/actions/upload-artifact)     | `v7.0.2`  |
+| [codecov/codecov-action](https://github.com/codecov/codecov-action)       | `v7.1.1`  |
+| [pnpm/action-setup](https://github.com/pnpm/action-setup)                 | `v6.1.0`  |
 
 ## Greenkeeping
 

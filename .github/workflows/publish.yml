@@ -43,8 +43,13 @@ jobs:
           gh api "repos/$GITHUB_REPOSITORY/actions/workflows/ci.yml/runs?head_sha=$source_sha&per_page=100" > "$RUNNER_TEMP/ci.json"
           jq -e --arg sha "$source_sha" '[.workflow_runs[] | select(.head_sha == $sha and .conclusion == "success" and .event == "push" and .head_branch == "main")] | length > 0' "$RUNNER_TEMP/ci.json"
       - run: pnpm install --frozen-lockfile
-      - name: Check and build
-        run: pnpm run lint && pnpm run typecheck && pnpm run coverage && pnpm run build && node scripts/test-runtime.mjs
+      # All independent source checks must pass before producing the release artifact.
+      - parallel:
+          - run: pnpm run lint
+          - run: pnpm run typecheck
+          - run: pnpm run coverage
+      - name: Build and check runtime exports
+        run: pnpm run build && node scripts/test-runtime.mjs
       - name: Pack the checked output
         env:
           RELEASE_TAG: ${{ github.event.release.tag_name }}

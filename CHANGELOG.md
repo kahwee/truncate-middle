@@ -3,6 +3,11 @@
 ## 2.0.7 (unreleased)
 
 - Refresh Node.js development types to 26.6.5.
+- Update pnpm to 12.15.0, Biome to 2.6.3, and Vitest with V8 coverage to 5.0.5.
+- Upgrade tsup to 9.0.0 while explicitly preserving Node.js 18 output compatibility.
+- Refresh compatible transitive dependencies, including Vite 8.3.5 security fixes.
+- Verify Node.js 18 and 20 runtime exports in CI, pin Actions to stable release
+  commits, and run independent release source checks concurrently.
 
 ## 2.0.6 (unreleased)
 

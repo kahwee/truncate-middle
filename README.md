@@ -84,7 +84,9 @@ combined character. This utility does not perform grapheme-aware truncation.
 
 ## Develop
 
-Use the development Node version in `.nvmrc` and the committed pnpm lockfile:
+Use Node.js 26 from `.nvmrc`, pnpm 12.15.0 from `package.json`, and the committed
+lockfile. tsup 9's development Node requirement does not raise the package's
+Node.js 18 runtime minimum; builds explicitly target Node.js 18.
 
 ```sh
 pnpm install --frozen-lockfile
@@ -98,8 +100,7 @@ node scripts/test-runtime.mjs
 Use `pnpm run coverage` for the coverage report. Source is in `src/index.ts`, tests
 in `test/index.test.ts`, and release notes in [CHANGELOG.md](CHANGELOG.md).
 CI builds with Node.js 26 and checks the built ESM and CommonJS exports with
-Node.js 22, 24, and 26, without installing development tools in the runtime jobs.
-Node.js 18 remains the declared runtime minimum; it is not currently verified by CI.
+Node.js 18, 20, 22, 24, and 26, without installing development tools in the runtime jobs.
 
 ## License
 

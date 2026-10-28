@@ -29,12 +29,12 @@
   "author": "KahWee Teng <t@kw.sg> (http://kw.sg/)",
   "license": "MIT",
   "devDependencies": {
-    "@biomejs/biome": "^2.5.15",
+    "@biomejs/biome": "^2.6.3",
     "@types/node": "^26.6.5",
-    "@vitest/coverage-v8": "^5.0.3",
-    "tsup": "^8.5.1",
+    "@vitest/coverage-v8": "^5.0.5",
+    "tsup": "^9.0.0",
     "typescript": "^7.0.2",
-    "vitest": "^5.0.3"
+    "vitest": "^5.0.5"
   },
   "repository": {
     "type": "git",
@@ -48,5 +48,5 @@
   "engines": {
     "node": ">=18"
   },
-  "packageManager": "pnpm@12.8.1"
+  "packageManager": "pnpm@12.15.0"
 }
