@@ -13,10 +13,9 @@ The intended [npm trusted-publisher](https://docs.npmjs.com/trusted-publishers/)
 identity is package `truncate-middle`, owner `kahwee`, repository
 `truncate-middle`, workflow `publish.yml`, and a blank environment. The intended
 grant permits direct `npm publish` without an additional dist-tag management grant. The external
-npm trust configuration has not been verified in this work. Approval for the exact
-six-package setup and publication is pending with the parent; this work created no
-tags or releases and published no package. A dry run does not validate the OIDC
-exchange or authorize a release.
+npm trust configuration has not been verified in this work. New trust configuration
+and real releases require separate explicit authorization. A dry run does not
+validate the OIDC exchange or authorize a release.
 
 Before any authorized configuration, read back the existing npm settings and
 preserve owner changes. A local login or secret presence does not prove CI publish
