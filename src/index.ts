@@ -39,3 +39,5 @@ export function truncateMiddle(
 
 // For backwards compatibility with default import
 export default truncateMiddle;
+
+export { truncateMiddleGraphemes } from "./graphemes.js";

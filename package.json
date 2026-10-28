@@ -1,27 +1,35 @@
 {
   "name": "truncate-middle",
-  "version": "2.0.7",
+  "version": "2.1.0",
   "description": "Truncates in the middle.",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs",
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      },
       "default": "./dist/index.js"
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "docs/api.md",
+    "CHANGELOG.md"
   ],
   "scripts": {
-    "build": "tsup && tsc --emitDeclarationOnly",
+    "build": "tsup && tsc --emitDeclarationOnly && node scripts/create-cjs-types.mjs",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
     "format": "biome format --write .",
     "test": "vitest run",
+    "test:package": "node scripts/test-package.mjs",
     "coverage": "vitest run --coverage",
     "typecheck": "tsc --noEmit",
     "prepublishOnly": "pnpm run build"

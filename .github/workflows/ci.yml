@@ -43,6 +43,8 @@ jobs:
           - run: pnpm run coverage
       - run: pnpm run build
       - run: node scripts/test-runtime.mjs
+      - name: Verify installed package and module-specific types
+        run: pnpm run test:package
       - name: Pack checked package
         run: pnpm pack --out "$RUNNER_TEMP/truncate-middle-check.tgz"
 
