@@ -2,6 +2,8 @@
 
 ## 3.0.0 (unreleased candidate)
 
+- Update Biome to 2.6.4 and Vitest with V8 coverage to 5.1.0; refresh compatible development dependencies.
+
 - Require Node.js 24 or newer; Node 18, 20, and 22 are no longer supported.
   Browser output compatibility and the existing default truncation behavior remain unchanged.
 - This candidate supersedes the unshipped 2.1.0 proposal.

@@ -33,7 +33,7 @@ and migration guidance.
 
 ## Develop
 
-Use Node.js 26 and the pinned pnpm 12.15.0; the built package supports Node 24+.
+Use Node.js 26 and the pinned pnpm 12.16.1; the built package supports Node 24+.
 
 ```sh
 pnpm install --frozen-lockfile
