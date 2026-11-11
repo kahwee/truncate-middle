@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.0.1 (unreleased candidate)
+
+- Skip grapheme segmentation when both retained lengths round to zero, while
+  preserving input validation and the Intl.Segmenter availability requirement.
+
 ## 3.0.0 (unreleased candidate)
 
 - Update Biome to 2.6.4 and Vitest with V8 coverage to 5.1.0; refresh compatible development dependencies.

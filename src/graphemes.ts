@@ -24,10 +24,14 @@ export function truncateMiddleGraphemes(
 
   const frontLength = Math.round(frontLen);
   const backLength = Math.round(backLen);
+  if (frontLength === 0 && backLength === 0) {
+    return str;
+  }
+
   const segmenter = new Intl.Segmenter(undefined, { granularity: "grapheme" });
   const graphemes = Array.from(segmenter.segment(str), ({ segment }) => segment);
 
-  if ((frontLength === 0 && backLength === 0) || frontLength + backLength >= graphemes.length) {
+  if (frontLength + backLength >= graphemes.length) {
     return str;
   }
   const front = graphemes.slice(0, frontLength).join("");
