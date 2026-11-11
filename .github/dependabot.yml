@@ -15,5 +15,5 @@ updates:
     open-pull-requests-limit: 3
     groups:
       compatible-dependencies:
-        patterns: ['*']
+        patterns: ["*"]
         update-types: [minor, patch]
