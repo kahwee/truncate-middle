@@ -17,7 +17,7 @@ truncateMiddle("reports/2026/september/invoice.pdf", 8, 11, "…");
 ```
 
 The default API counts UTF-16 code units, preserving its existing behavior.
-For complete emoji and combined characters, **3.0.0 (unreleased candidate)** adds an opt-in API:
+For complete emoji and combined characters, **3.x** adds an opt-in API:
 
 ```js
 import { truncateMiddleGraphemes } from "truncate-middle";
