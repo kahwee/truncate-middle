@@ -151,3 +151,57 @@ test("npm publication uses an explicit local tarball, never GitHub shorthand", (
   assert.match(workflow, /execFileSync\('npm', \['publish', '\.\/release\/package\.tgz'/);
   assert.doesNotMatch(workflow, /\['publish', 'release\/package\.tgz'/);
 });
+
+test("publisher readback allows processing delays but fails closed within five minutes", async () => {
+  const { runInNewContext } = await import("node:vm");
+  const workflow = readFileSync(
+    new URL("../.github/workflows/publish.yml", import.meta.url),
+    "utf8"
+  );
+  const loop = workflow.match(/ {10}const deadline = Date.now\(\)[\s\S]*?(?=\n {10}JS)/)?.[0];
+  assert.ok(loop, "bounded publisher readback loop must exist");
+  assert.doesNotMatch(loop, /execFileSync|npm.*publish/);
+
+  const simulate = async (visibleAfter, corrupt = false) => {
+    let now = 0;
+    let reads = 0;
+    const verified = new Error("verified");
+    const context = {
+      Date: { now: () => now },
+      version: "3.0.2",
+      readRegistry: async () => ({
+        "dist-tags": { latest: ++reads >= visibleAfter ? "3.0.2" : "2.0.1" },
+        versions: reads >= visibleAfter ? { "3.0.2": {} } : {},
+      }),
+      verify: () => {
+        if (corrupt) throw new Error("integrity mismatch");
+      },
+      compare: () => 0,
+      process: {
+        exit: () => {
+          throw verified;
+        },
+      },
+      console: { log: () => {} },
+      setTimeout: (resolve, delay) => {
+        now += delay;
+        resolve();
+      },
+    };
+    try {
+      await runInNewContext(`(async () => { ${loop} })()`, context);
+      assert.fail("verification must return success or a diagnostic");
+    } catch (error) {
+      return { error, verified, now, reads };
+    }
+  };
+  const delayed = await simulate(20);
+  assert.equal(delayed.error, delayed.verified);
+  assert.equal(delayed.reads, 20);
+  const unavailable = await simulate(Infinity);
+  assert.match(unavailable.error.message, /timed out.*Publication may have succeeded/);
+  assert.equal(unavailable.now, 300000);
+  const corrupt = await simulate(1, true);
+  assert.match(corrupt.error.message, /integrity mismatch/);
+  assert.equal(corrupt.reads, 1);
+});
