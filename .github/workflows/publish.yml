@@ -142,7 +142,7 @@ jobs:
           if (Object.hasOwn(before.versions, version)) verify(before.versions[version]);
           else {
             if (compare(before['dist-tags'].latest, version) >= 0) throw new Error('Refusing latest downgrade');
-            execFileSync('npm', ['publish', 'release/package.tgz', '--ignore-scripts', '--access', 'public', '--tag', 'latest', '--registry', 'https://registry.npmjs.org'], { stdio: 'inherit' });
+            execFileSync('npm', ['publish', './release/package.tgz', '--ignore-scripts', '--access', 'public', '--tag', 'latest', '--registry', 'https://registry.npmjs.org'], { stdio: 'inherit' });
           }
           for (let attempt = 0; attempt < 6; attempt++) {
             const after = await readRegistry();
