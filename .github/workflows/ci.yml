@@ -48,9 +48,9 @@ jobs:
       - name: Pack checked package
         run: pnpm pack --out "$RUNNER_TEMP/truncate-middle-check.tgz"
 
-      - name: Read-only publish dry run of the checked tarball
+      - name: Inspect the checked archive without publication
         working-directory: ${{ runner.temp }}
-        run: npm publish "$RUNNER_TEMP/truncate-middle-check.tgz" --dry-run --ignore-scripts --access public --tag latest
+        run: npm pack "$RUNNER_TEMP/truncate-middle-check.tgz" --dry-run --ignore-scripts --json
 
       - name: Upload built package
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
