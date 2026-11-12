@@ -205,3 +205,10 @@ test("publisher readback allows processing delays but fails closed within five m
   assert.match(corrupt.error.message, /integrity mismatch/);
   assert.equal(corrupt.reads, 1);
 });
+
+test("CI inspects archives without testing immutable-version publication", () => {
+  const workflow = readFileSync(new URL("../.github/workflows/ci.yml", import.meta.url), "utf8");
+  assert.match(workflow, /npm pack .*--dry-run --ignore-scripts --json/);
+  assert.doesNotMatch(workflow, /npm publish/);
+  assert.match(workflow, /pnpm run test:package/);
+});
