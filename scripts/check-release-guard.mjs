@@ -143,7 +143,6 @@ test("publication is main-only with credentials isolated from build code", () =>
   assert.match(workflow, /queue: max\s*\n {2}cancel-in-progress: false/);
 });
 
-
 test("npm publication uses an explicit local tarball, never GitHub shorthand", () => {
   const workflow = readFileSync(
     new URL("../.github/workflows/publish.yml", import.meta.url),
