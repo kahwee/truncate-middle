@@ -1,5 +1,14 @@
 # Changelog
 
+## 3.0.2 (unreleased candidate)
+
+- Retain grapheme boundaries without materializing an array of every cluster;
+  preserve the opt-in API's existing validation and Unicode behavior.
+- Run publishing only by explicit dispatch from main. Build and test without
+  OIDC authority, then publish the checked archive in a separate job that runs
+  no repository code or package lifecycle scripts.
+- Revalidate archive identity, integrity and registry state in the publication job.
+
 ## 3.0.1 (unreleased candidate)
 
 - Skip grapheme segmentation when both retained lengths round to zero, while

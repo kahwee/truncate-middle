@@ -29,12 +29,23 @@ export function truncateMiddleGraphemes(
   }
 
   const segmenter = new Intl.Segmenter(undefined, { granularity: "grapheme" });
-  const graphemes = Array.from(segmenter.segment(str), ({ segment }) => segment);
-
-  if (frontLength + backLength >= graphemes.length) {
-    return str;
+  const segments = segmenter.segment(str);
+  let frontEnd = 0;
+  let retained = 0;
+  for (const { index, segment } of segments) {
+    if (retained === frontLength) break;
+    frontEnd = index + segment.length;
+    retained++;
   }
-  const front = graphemes.slice(0, frontLength).join("");
-  const back = backLength === 0 ? "" : graphemes.slice(-backLength).join("");
-  return front + truncateStr + back;
+  if (frontEnd === str.length) return str;
+
+  // Walk backwards by complete clusters instead of allocating every cluster.
+  let backStart = str.length;
+  for (let count = 0; count < backLength; count++) {
+    const tail = segments.containing(backStart - 1);
+    if (!tail) return str;
+    backStart = tail.index;
+    if (backStart <= frontEnd) return str;
+  }
+  return str.slice(0, frontEnd) + truncateStr + str.slice(backStart);
 }
