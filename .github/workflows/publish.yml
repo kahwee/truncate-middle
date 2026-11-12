@@ -144,13 +144,22 @@ jobs:
             if (compare(before['dist-tags'].latest, version) >= 0) throw new Error('Refusing latest downgrade');
             execFileSync('npm', ['publish', './release/package.tgz', '--ignore-scripts', '--access', 'public', '--tag', 'latest', '--registry', 'https://registry.npmjs.org'], { stdio: 'inherit' });
           }
-          for (let attempt = 0; attempt < 6; attempt++) {
+          // npm may accept and sign a package before its registry metadata is visible.
+          // Retry readback only: never repeat publication while processing is pending.
+          const deadline = Date.now() + 5 * 60 * 1000;
+          let attempts = 0;
+          let observedLatest;
+          while (Date.now() < deadline) {
+            attempts++;
             const after = await readRegistry();
+            observedLatest = after['dist-tags'].latest;
             if (Object.hasOwn(after.versions, version)) {
               verify(after.versions[version]);
               if (compare(after['dist-tags'].latest, version) >= 0) process.exit(0);
             }
-            await new Promise(resolve => setTimeout(resolve, 5000));
+            console.log(`Registry processing pending for ${version}; latest=${observedLatest}; readback attempt ${attempts}`);
+            const remaining = deadline - Date.now();
+            if (remaining > 0) await new Promise(resolve => setTimeout(resolve, Math.min(5000, remaining)));
           }
-          throw new Error('Registry verification exhausted');
+          throw new Error(`Registry readback timed out after ${attempts} checks for ${version}; latest=${observedLatest}. Publication may have succeeded. Inspect registry state before retrying.`);
           JS
