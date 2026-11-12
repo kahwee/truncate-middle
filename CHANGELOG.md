@@ -1,11 +1,20 @@
 # Changelog
 
-## 3.0.1 (unreleased candidate)
+## 3.0.2 (2026-11-12)
+
+- Retain grapheme boundaries without materializing an array of every cluster;
+  preserve the opt-in API's existing validation and Unicode behavior.
+- Run publishing only by explicit dispatch from main. Build and test without
+  OIDC authority, then publish the checked archive in a separate job that runs
+  no repository code or package lifecycle scripts.
+- Revalidate archive identity, integrity and registry state in the publication job.
+
+## 3.0.1 (unpublished candidate, included in 3.0.2)
 
 - Skip grapheme segmentation when both retained lengths round to zero, while
   preserving input validation and the Intl.Segmenter availability requirement.
 
-## 3.0.0 (unreleased candidate)
+## 3.0.0 (unpublished candidate, included in 3.0.2)
 
 - Update Biome to 2.6.4 and Vitest with V8 coverage to 5.1.0; refresh compatible development dependencies.
 
@@ -26,7 +35,7 @@
   type resolution for `require()` without changing runtime module paths.
 
 This candidate supersedes the unshipped 2.0.7 candidate. Earlier unreleased notes
-below remain part of this release's history; no version has been published by this update.
+below remain part of the 3.0.2 release history.
 
 ## 2.0.7 (unreleased)
 

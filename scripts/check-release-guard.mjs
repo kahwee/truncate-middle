@@ -119,23 +119,26 @@ test("registry errors and malformed or inconsistent metadata fail closed", async
   );
 });
 
-test("workflow remains release-only with unchanged permissions and queued publishing", () => {
+test("publication is main-only with credentials isolated from build code", () => {
   const workflow = readFileSync(
     new URL("../.github/workflows/publish.yml", import.meta.url),
     "utf8"
   );
-  assert.match(workflow, /on:\s*\n {2}release:\s*\n {4}types: \[published\]/);
-  assert.doesNotMatch(workflow, /\n {2}(push|workflow_dispatch):/);
-  assert.match(
-    workflow,
-    /group: npm-release-truncate-middle\s*\n {2}queue: max\s*\n {2}cancel-in-progress: false/
-  );
-  assert.match(workflow, /permissions:\s*\n {2}contents: read/);
-  assert.match(
-    workflow,
-    /permissions:\s*\n {6}contents: read\s*\n {6}actions: read\s*\n {6}id-token: write/
-  );
-  assert.equal((workflow.match(/id-token: write/g) || []).length, 1);
-  assert.match(workflow, /if: steps.metadata.outputs.should_publish == 'true'/);
-  assert.match(workflow, /--verify "\$RUNNER_TEMP\/release\/package.tgz"/);
+  assert.match(workflow, /on:\s*\n {2}workflow_dispatch:/);
+  assert.doesNotMatch(workflow, /\n {2}(push|release):/);
+  const [prepare, publish] = workflow.split("\n  publish:");
+  assert.doesNotMatch(prepare, /id-token: write/);
+  assert.match(publish, /needs: prepare/);
+  const gate = prepare.indexOf("Require successful CI on this exact source");
+  assert.ok(gate > 0 && gate < prepare.indexOf("uses: pnpm/action-setup"));
+  assert.ok(gate < prepare.indexOf("node scripts/release-check.mjs"));
+  assert.match(prepare, /refs\/tags\/\$RELEASE_TAG\^\{commit\}/);
+
+  assert.match(prepare, /github.ref == 'refs\/heads\/main'/);
+  assert.match(publish, /github.ref == 'refs\/heads\/main'/);
+  assert.match(publish, /id-token: write/);
+  assert.doesNotMatch(publish, /uses: actions\/checkout|pnpm|node scripts\//);
+  assert.match(publish, /'--ignore-scripts'/);
+  assert.match(publish, /pkg.publishConfig/);
+  assert.match(workflow, /queue: max\s*\n {2}cancel-in-progress: false/);
 });

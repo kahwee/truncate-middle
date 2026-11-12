@@ -81,3 +81,36 @@ describe("truncateMiddleGraphemes", () => {
     }
   );
 });
+
+describe("grapheme boundary traversal", () => {
+  it("matches full segmentation across adversarial text and retained lengths", () => {
+    const inputs = [
+      "",
+      "abc",
+      "👩‍💻e\u0301🇸🇬x👍🏽",
+      "\r\nabc\r\n",
+      "\ud800ab\udc00",
+      "क्षabc",
+      "🇦🇧🇨🇩🇪",
+    ];
+    const segmenter = new Intl.Segmenter(undefined, { granularity: "grapheme" });
+    for (const input of inputs) {
+      const clusters = Array.from(segmenter.segment(input), ({ segment }) => segment);
+      for (let front = 0; front <= clusters.length + 1; front++) {
+        for (let back = 0; back <= clusters.length + 1; back++) {
+          const expected =
+            (front === 0 && back === 0) || front + back >= clusters.length
+              ? input
+              : clusters.slice(0, front).join("") +
+                "…" +
+                (back === 0 ? "" : clusters.slice(-back).join(""));
+          expect(truncateMiddleGraphemes(input, front, back, "…")).toBe(expected);
+        }
+      }
+    }
+  });
+
+  it("keeps both ends of a large input without materializing a cluster array", () => {
+    expect(truncateMiddleGraphemes(`👩‍💻${"x".repeat(100000)}🇸🇬`, 1, 1, "…")).toBe("👩‍💻…🇸🇬");
+  });
+});

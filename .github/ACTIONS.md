@@ -4,17 +4,17 @@ This guide describes the checked-in workflows. Follow each linked YAML file for 
 
 ## Workflows
 
-| Workflow                             | Events                     | Jobs                                           |
-| ------------------------------------ | -------------------------- | ---------------------------------------------- |
-| [ci.yml](workflows/ci.yml)           | `push`, `pull_request`     | `test`, `runtime`                              |
-| [publish.yml](workflows/publish.yml) | stable release `published` | `publish` (exact-source CI and registry gates) |
+| Workflow                             | Events                    | Jobs                                                      |
+| ------------------------------------ | ------------------------- | --------------------------------------------------------- |
+| [ci.yml](workflows/ci.yml)           | `push`, `pull_request`    | `test`, `runtime`                                         |
+| [publish.yml](workflows/publish.yml) | manual dispatch on `main` | `prepare`, `publish` (exact-source CI and registry gates) |
 
 ## Parallel steps
 
 Independent checks use GitHub Actions [native parallel steps](https://github.blog/changelog/2026-06-25-actions-steps-can-now-be-run-in-parallel/). The following groups run concurrently within a job:
 
 - [ci.yml](workflows/ci.yml), job `test`: `pnpm audit --audit-level=high`; `pnpm run lint`; `pnpm run typecheck`; `pnpm run coverage`.
-- [publish.yml](workflows/publish.yml), job `publish`: `pnpm run lint`; `pnpm run typecheck`; `pnpm run coverage`. Build, runtime checks, packing, and publication remain ordered.
+- [publish.yml](workflows/publish.yml), job `prepare`: `pnpm run lint`; `pnpm run typecheck`; `pnpm run coverage`. Build, runtime checks, packing, and publication remain ordered.
 - The CI `runtime` matrix checks Node.js 24 and 26 after downloading the shared checked build.
 
 Steps after a group wait for it to finish. Keep prerequisites before the group and dependent build, package, or deployment work afterward. Do not run commands that overwrite the same build directory or coverage output together. Parallel steps share the job workspace; they do not provide separate machines.
@@ -43,3 +43,15 @@ All external actions are pinned to the immutable commit of the stable release li
 5. Refresh this guide when workflows, action references, or parallel groups change.
 
 Use workflow concurrency to cancel superseded check runs where appropriate. Deployment and release cancellation have different consequences: preserve the workflow’s existing policy rather than copying check-run settings blindly. Repository permissions and job-level overrides are defined in the linked YAML files.
+
+## Publication boundary
+
+Dispatch `publish.yml` from `main` with an existing stable `vX.Y.Z` tag only after
+release authorization and review. Creating a GitHub release alone does not publish.
+The prepare job verifies tag membership in main and successful push CI for that
+exact source before installing dependencies, testing and packing. It has no OIDC
+permission. The publish job receives that run's immutable archive, does not check
+out the repository or install dependencies, and publishes with lifecycle scripts
+disabled. Package identity and registry archive integrity are checked again there.
+The main branch remains a trust root: keep its write access and review protections
+appropriate. Do not infer safety from a tag name or a green dependency build alone.

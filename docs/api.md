@@ -8,8 +8,7 @@ The package has no runtime dependencies and supports Node.js 24+.
 
 Node.js consumers must upgrade to Node 24 or newer. The default UTF-16 API and
 existing exports retain their behavior; the grapheme API is opt-in and requires
-`Intl.Segmenter`. The browser output target is unchanged. This is a candidate,
-not a published release.
+`Intl.Segmenter`. The browser output target is unchanged. The 3.x release line intentionally drops Node 18, 20, and 22 support.
 
 ## Existing UTF-16 API
 
@@ -40,7 +39,7 @@ truncateMiddle(null, 5, 3, "…"); // ""
 truncateMiddle("😀abcd", 1, 1, "…"); // "\ud83d…d" (split surrogate)
 ```
 
-## Opt-in grapheme API (3.0.0 candidate)
+## Opt-in grapheme API (3.x)
 
 `truncateMiddleGraphemes(str, frontLen = 0, backLen = 0, truncateStr = "&hellip;")`
 
