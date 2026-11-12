@@ -31,6 +31,13 @@ Both APIs default to the literal separator `"&hellip;"`. See the packed
 [API reference](docs/api.md) for bounds, nullish inputs, CommonJS examples,
 and migration guidance.
 
+## Referenced by WordPress Gutenberg
+
+[WordPress Gutenberg’s truncation utility](https://github.com/WordPress/gutenberg/blob/trunk/packages/components/src/truncate/utils.ts)
+credits this project as the source for its middle-truncation implementation.
+This is code attribution, not evidence that Gutenberg installs the npm package
+or uses the current 3.x release.
+
 ## Develop
 
 Use Node.js 26 and the pinned pnpm 12.16.1; the built package supports Node 24+.
