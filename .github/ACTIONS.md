@@ -55,3 +55,10 @@ out the repository or install dependencies, and publishes with lifecycle scripts
 disabled. Package identity and registry archive integrity are checked again there.
 The main branch remains a trust root: keep its write access and review protections
 appropriate. Do not infer safety from a tag name or a green dependency build alone.
+
+CI inspects the packed archive with `npm pack --dry-run --ignore-scripts` and
+checks installed consumers; it does not simulate publication of an immutable
+version that may already exist. Actual publication retains registry identity and
+integrity gates. After npm accepts a publication, readback allows up to five
+minutes for registry processing. A timeout is an uncertain outcome, not a reason
+to upload again: inspect registry state and retain the original archive first.
